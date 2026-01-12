@@ -10,7 +10,7 @@ This repository focuses on **numerical simulation and validation** of the NUQFT 
 
 ### Non-Uniform Discrete Fourier Transform (NUDFT)
 
-Given samples $\{x_j\}_{j=0}^{N-1}$ taken at non-uniform locations  
+Given samples $``\{x_j\}_{j=0}^{N-1}''$ taken at non-uniform locations  
 $\{t_j\}_{j=0}^{N-1} \subset [0,1)$, the Type–II NUDFT computes
 \[
 X_k = \sum_{j=0}^{N-1} x_j e^{-2\pi i k t_j}, \qquad k = 0,\dots,N-1.
