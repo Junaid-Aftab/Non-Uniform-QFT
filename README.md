@@ -4,8 +4,6 @@
 
 The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the assumption of uniformly spaced inputs in signal or frequency domains. This repository focuses on the numerical implementation and evaluation of the proposed NUQFT algorithm, including simulations, validation experiments, and performance analysis.
 
----
-
 ## Mathematical Background
 
 The standard Quantum Fourier Transform (QFT) implements a unitary transformation corresponding to the discrete Fourier transform over uniformly spaced computational basis states. While this structure is central to many quantum algorithms, it limits applicability in scenarios involving non-uniform sampling, irregular frequency grids, or weighted spectral representations.
