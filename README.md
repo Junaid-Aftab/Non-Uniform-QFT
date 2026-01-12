@@ -6,50 +6,26 @@ The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the ass
 
 ## Mathematical Background
 
-This repository focuses on **numerical simulation and validation** of the NUQFT construction rather than direct gate-level quantum compilation. Accordingly, we summarize only the mathematical components that directly inform what is implemented in code.
+## Mathematical Background
 
 ### Non-Uniform Discrete Fourier Transform (NUDFT)
 
-Given samples $${x_j}_{j=0}^{N-1}$$ taken at non-uniform locations  
-$\{t_j\}_{j=0}^{N-1} \subset [0,1)$, the Type–II NUDFT computes
-\[
-X_k = \sum_{j=0}^{N-1} x_j e^{-2\pi i k t_j}, \qquad k = 0,\dots,N-1.
-\]
-This can be written in matrix form as
-\[
-\mathbf{X} = F_{\mathrm{II}} \mathbf{x},
-\quad
-(F_{\mathrm{II}})_{k,j} = e^{-2\pi i k t_j}.
-\]
+Given samples $\{x_j\}_{j=0}^{N-1}$ at non-uniform locations $\{t_j\}_{j=0}^{N-1}\subset[0,1)$, the Type–II NUDFT is
 
-Unlike the standard DFT, the matrix \(F_{\mathrm{II}}\) is dense and lacks the structure needed for fast FFT-style evaluation. :contentReference[oaicite:0]{index=0}
+![NUDFT equation](https://latex.codecogs.com/svg.image?X_k%20%3D%20%5Csum_%7Bj%3D0%7D%5E%7BN-1%7D%20x_j%20e%5E%7B-2%5Cpi%20i%20k%20t_j%7D%2C%20%5Cqquad%20k%3D0%2C%5Cldots%2C%20N-1.)
+
+In matrix form,
+
+![Matrix form](https://latex.codecogs.com/svg.image?%5Cmathbf%7BX%7D%20%3D%20F_%7B%5Cmathrm%7BII%7D%7D%5Cmathbf%7Bx%7D%2C%20%5Cad%20(F_%7B%5Cmathrm%7BII%7D%7D)_%7Bk%2Cj%7D%20%3D%20e%5E%7B-2%5Cpi%20i%20k%20t_j%7D.)
 
 ### Low-Rank Approximation
 
-The NUQFT algorithm is based on the observation that \(F_{\mathrm{II}}\) admits an accurate **low-rank approximation**:
-\[
-F_{\mathrm{II}} \;\approx\; \sum_{r=0}^{K-1} D_{\mathbf{u}_r}\, F_{\mathrm{DFT}}\, D_{\mathbf{v}_r},
-\]
-where:
-- \(F_{\mathrm{DFT}}\) is the standard DFT matrix,
-- \(D_{\mathbf{u}_r}\) and \(D_{\mathbf{v}_r}\) are diagonal matrices,
-- the vectors \(\mathbf{u}_r\) and \(\mathbf{v}_r\) depend on the non-uniform sampling points \(\{t_j\}\),
-- \(K\) controls the approximation accuracy.
+The NUQFT construction uses a low-rank approximation
 
-This factorization is obtained by separating the NUDFT kernel into a uniform Fourier term and a smooth correction term, which is then approximated using truncated Chebyshev expansions. For a target accuracy \(\varepsilon\), the required rank satisfies
-\[
-K = O\!\left(\frac{\log(1/\varepsilon)}{\log\log(1/\varepsilon)}\right).
-\] :contentReference[oaicite:1]{index=1}
+![Low-rank approx](https://latex.codecogs.com/svg.image?F_%7B%5Cmathrm%7BII%7D%7D%20%5Capprox%20%5Csum_%7Br%3D0%7D%5E%7BK-1%7D%20D_%7B%5Cmathbf%7Bu%7D_r%7D%20F_%7B%5Cmathrm%7BDFT%7D%7D%20D_%7B%5Cmathbf%7Bv%7D_r%7D.)
 
-### Relevance to This Codebase
+with truncation rank scaling
 
-The numerical components implemented in this repository include:
-- Construction of the diagonal vectors \(\mathbf{u}_r\) and \(\mathbf{v}_r\),
-- Assembly of the low-rank approximation
-  \(\sum_r D_{\mathbf{u}_r} F_{\mathrm{DFT}} D_{\mathbf{v}_r}\),
-- Verification of approximation accuracy against the exact NUDFT,
-- Empirical analysis of truncation rank \(K\), error decay, and runtime scaling.
-
-Quantum-specific techniques such as block encodings, QSP, and LCU motivate the structure of the decomposition but are **not explicitly simulated** at the gate level. Instead, the code mirrors the linear-algebraic structure that these quantum subroutines would implement.
+![K scaling](https://latex.codecogs.com/svg.image?K%20%3D%20O%5C!%5Cleft(%5Cfrac%7B%5Clog(1%2F%5Cvarepsilon)%7D%7B%5Clog%5Clog(1%2F%5Cvarepsilon)%7D%5Cright).)
 
 
