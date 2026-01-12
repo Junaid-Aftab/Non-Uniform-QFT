@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Results / data (adjust policy as you prefer)
+# If you want deterministic small datasets tracked, remove data/ from ignore.
+results/*
+data/*
+
+# Keep folder placeholders
+!results/.gitkeep
+!data/.gitkeep
