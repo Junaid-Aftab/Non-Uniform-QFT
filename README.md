@@ -7,6 +7,6 @@ The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the ass
 ## Repository structure
 - `src/nuqft/` : reusable implementation code
 - `notebooks/` : numbered notebooks (run in order)
-- `data/`      : generated datasets (deterministic; small)
+- `data/`      : generated datasets
 - `results/`   : figures/tables produced by experiments
 - `tests/`     : unit tests
