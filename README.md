@@ -4,9 +4,7 @@
 
 This repository contains the numerical computations performed for our **Non-Uniform Quantum Fourier Transform (NUQFT)** project.
 
-The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the assumption of uniformly spaced input in signal or frequency domains. This work focuses on the numerical implementation and evaluation of the proposed NUQFT algorithm, including simulations, validation experiments, and performance analysis.
-
-The codebase is intended to support theoretical investigation and experimental verification of the algorithm, and may serve as a foundation for further research in quantum signal processing and quantum algorithm design.
+The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the assumption of uniformly spaced inputs in signal or frequency domains. This work focuses on the numerical implementation and evaluation of the proposed NUQFT algorithm, including simulations, validation experiments, and performance analysis.
 
 ---
 
