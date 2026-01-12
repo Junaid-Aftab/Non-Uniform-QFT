@@ -9,8 +9,3 @@ The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the ass
 The standard Quantum Fourier Transform (QFT) implements a unitary transformation corresponding to the discrete Fourier transform over uniformly spaced computational basis states. While this structure is central to many quantum algorithms, it limits applicability in scenarios involving non-uniform sampling, irregular frequency grids, or weighted spectral representations.
 
 The **Non-Uniform Quantum Fourier Transform (NUQFT)** extends this framework by allowing transformations defined over non-equidistant input domains. The mathematical formulation adapts classical non-uniform Fourier techniques to the quantum setting while preserving unitarity and compatibility with quantum circuit models.
-
-This repository focuses on the numerical aspects of this formulation, including:
-- Discrete representations of non-uniform domains  
-- Approximation strategies suitable for quantum implementation  
-- Error behavior and numerical stability  
