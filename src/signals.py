@@ -5,6 +5,11 @@ This module defines methods for generating constructing complex-valued test
 signals commonly used in Fourier and signal-processing experiments.
 """
 
+from __future__ import annotations
+import numpy as np
+import scipy.fft as sfft
+
+
 def signal_random_complex(
     N: int,
     rng: np.random.Generator | None = None,
@@ -72,7 +77,7 @@ def signal_sparse_spectrum(
     X = np.zeros(N, dtype=complex)
 
     # Pick random distinct frequency indices for the nonzeros
-    ks = rng.choice(N, size=min(sparsity, N), replace=Falses
+    ks = rng.choice(N, size=min(sparsity, N), replace=False)
 
     # Fill those frequency bins with random complex amplitudes
     X[ks] = rng.standard_normal(len(ks)) + 1j * rng.standard_normal(len(ks))

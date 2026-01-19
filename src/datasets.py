@@ -8,8 +8,6 @@ near-colliding).
 
 from __future__ import annotations
 import numpy as np
-import scipy.fft as sfft
-
 
 def nodes_uniform(N: int) -> np.ndarray:
     """
