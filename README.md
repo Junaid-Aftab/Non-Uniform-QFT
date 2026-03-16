@@ -3,16 +3,6 @@
 ## Project Description
 The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the assumption of uniformly spaced inputs in signal or frequency domains. This repository focuses on the numerical implementation and evaluation of the proposed NUQFT algorithm, including simulations, validation experiments, and performance analysis.
 
-## Features
-
-- Numerical experimentation with **non-uniform spatial grids**
-- Utilities for discretizing fields on irregular meshes
-- Prototype routines for **field evolution and analysis**
-- Jupyter notebooks demonstrating workflows and experiments
-- Modular code structure suitable for extending new QFT experiments
-
----
-
 ## Repository Structure
 
 ```
