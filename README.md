@@ -48,7 +48,7 @@ Non-Uniform-QFT/
 - `src/datasets/` contains helper code for data generation and signal construction.
 - `tests/` is notebook-driven and serves as the main experimentation and validation area.
 - `tests/figures/` stores generated plots and exported results associated with the notebooks.
-```
+
 ---
 
 ## Installation
