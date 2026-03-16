@@ -22,28 +22,12 @@ Type-II low-rank NUFFT operator:
 3) an FFT along the uniform dimension
 4) elementwise multiplication by V (per rank)
 5) summation over the rank dimension
-
-Notes
------
-- This implementation targets correctness and clarity. It uses NumPy for FFTs
-  and SciPy for special functions (Lambert W and Bessel J).
-- Input nodes x are assumed real-valued and typically lie in [0, 1). Values
-  outside [0, 1) will still run, but the approximation quality is not guaranteed.
-
-References
-----------
-A. H. Barnett, J. F. Magland, and L. af Klinteberg, "A parallel nonuniform
-fast Fourier transform library based on an exponential of semicircle kernel,"
-(standard NUFFT background).
-
-S. A. Antolín and A. Townsend, "A fast algorithm for nonuniform Fourier
-transforms based on low rank approximation," (low-rank factorization approach).
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 
@@ -61,8 +45,7 @@ ArrayLike = Union[np.ndarray, list, tuple]
 
 
 def _require_scipy() -> None:
-    """
-    Raise an informative error if SciPy is not available.
+    """ Raise an informative error if SciPy is not available.
 
     This module relies on special functions (Bessel J and Lambert W) from
     `scipy.special`. If SciPy is missing or failed to import, this helper raises
@@ -85,8 +68,7 @@ def _require_scipy() -> None:
 
 
 def assign_closest_equispaced_gridpoint(x: np.ndarray) -> np.ndarray:
-    """
-    Assign each nonuniform node to the closest equispaced grid point.
+    """ Assign each nonuniform node to the closest equispaced grid point.
 
     Given real-valued nodes x_j, this routine computes the nearest integer grid
     index s_j = round(N * x_j), where N = len(x). No modulo is applied.
@@ -109,8 +91,7 @@ def assign_closest_equispaced_gridpoint(x: np.ndarray) -> np.ndarray:
 
 
 def assign_closest_equispaced_fftpoint(x: np.ndarray) -> np.ndarray:
-    """
-    Assign each node to the closest FFT grid index, wrapped modulo N.
+    """ Assign each node to the closest FFT grid index, wrapped modulo N.
 
     This routine computes the nearest integer grid index and wraps it into the
     FFT grid index set {0, ..., N-1} via modulo arithmetic:
@@ -124,18 +105,16 @@ def assign_closest_equispaced_fftpoint(x: np.ndarray) -> np.ndarray:
         t_j = round(N * x_j) mod N.
 
     Raises:
-        ValueError: If x is not a one-dimensional array.
+        None.
     """
-    x = np.asarray(x)
-    if x.ndim != 1:
-        raise ValueError("x must be a 1D array")
     n = x.size
-    return (np.rint(n * x).astype(np.int64) % n)
+    t = (np.rint(n * x).astype(np.int64) % n)
+
+    return t
 
 
 def perturbation_parameter(x: np.ndarray, s: np.ndarray) -> float:
-    """
-    Compute the perturbation parameter gamma used to select the low-rank rank.
+    """ Compute the perturbation parameter gamma used to select the low-rank rank.
 
     The perturbation parameter is defined as
         gamma = max_j |N * x_j - s_j|,
@@ -161,8 +140,7 @@ def perturbation_parameter(x: np.ndarray, s: np.ndarray) -> float:
 
 
 def find_k(gamma: float, eps: float) -> int:
-    """
-    Choose the rank K for the low-rank NUFFT factorization.
+    """ Choose the rank K for the low-rank NUFFT factorization.
 
     This routine implements the rank selection rule used in the referenced
     low-rank approximation approach. For sufficiently small perturbation
@@ -190,13 +168,14 @@ def find_k(gamma: float, eps: float) -> int:
     if gamma <= eps:
         return 1
 
-    val = 5.0 * gamma * np.exp(np.real(lambertw(np.log(10.0 / eps) / gamma / 7.0)))
+    val = 5.0 * gamma * np.exp(
+        np.real(lambertw(np.log(140.0 / eps) / (5.0 * gamma)))
+    )
     return int(np.ceil(val))
 
 
 def chebyshev_polynomials(n: int, x: np.ndarray) -> np.ndarray:
-    """
-    Evaluate Chebyshev polynomials T_0, ..., T_n at given points.
+    """ Evaluate Chebyshev polynomials T_0, ..., T_n at given points.
 
     This routine computes the first-kind Chebyshev polynomials using the
     three-term recurrence:
@@ -231,9 +210,10 @@ def chebyshev_polynomials(n: int, x: np.ndarray) -> np.ndarray:
     return T
 
 
-def bessel_coeffs(K: int, gamma: float, dtype: np.dtype = np.complex128) -> np.ndarray:
-    """
-    Compute the Chebyshev coefficient matrix used in the low-rank approximation.
+def bessel_coeffs(
+    K: int, gamma: float, dtype: np.dtype = np.complex128
+) -> np.ndarray:
+    """ Compute the Chebyshev coefficient matrix used in the low-rank approximation.
 
     This routine forms the (K, K) coefficient matrix built from Bessel J
     functions, following the coefficient formulas used by the low-rank NUFFT
@@ -272,8 +252,7 @@ def bessel_coeffs(K: int, gamma: float, dtype: np.dtype = np.complex128) -> np.n
 
 
 def construct_u(x: np.ndarray, K: int) -> np.ndarray:
-    """
-    Construct the matrix U used in the low-rank NUFFT factorization.
+    """ Construct the matrix U used in the low-rank NUFFT factorization.
 
     For nodes x_j, this routine computes the nearest grid indices s_j and the
     perturbations e_j = N*x_j - s_j. It then builds U using an oscillatory phase
@@ -312,8 +291,7 @@ def construct_u(x: np.ndarray, K: int) -> np.ndarray:
 
 
 def construct_v(N: int, K: int) -> np.ndarray:
-    """
-    Construct the matrix V used in the low-rank NUFFT factorization.
+    """ Construct the matrix V used in the low-rank NUFFT factorization.
 
     This routine evaluates Chebyshev polynomials on the mapped uniform grid
     xi_k = 2*k/N - 1 for k = 0, ..., N-1.
@@ -377,8 +355,7 @@ class NUFFT2Plan:
     K: int
 
     def __call__(self, c: ArrayLike) -> np.ndarray:
-        """
-        Apply the planned nonuniform-to-uniform transform.
+        """ Apply the planned nonuniform-to-uniform transform.
 
         The input may be a single vector of samples c_j or a matrix whose columns
         are independent sample vectors. The output has matching dimensionality,
@@ -428,24 +405,25 @@ class NUFFT2Plan:
         raise ValueError("c must be a 1D or 2D array")
 
 
-def plan_nufft2(x: ArrayLike, eps: float) -> NUFFT2Plan:
-    """
-    Precompute a plan for the 1D nonuniform-to-uniform Fourier transform.
+def plan_nufft2(x: ArrayLike, eps: float, K: Optional[int] = None) -> NUFFT2Plan:
+    """ Precompute a plan for the 1D nonuniform-to-uniform Fourier transform.
 
-    This routine builds the low-rank factors (U, V) and the FFT scatter indices
-    t for a fixed set of nodes x, and selects the rank K from the perturbation
-    parameter gamma and the requested tolerance eps.
+    If K is provided, it overrides the rank selection rule and is used directly.
+    Otherwise, K is chosen from (gamma, eps) via find_k.
 
     Args:
         x: One-dimensional array-like of real-valued nonuniform nodes (shape (N,)).
         eps: Target accuracy used to select the rank K (must be positive).
+        K: Optional manual rank override (must be >= 1). If provided, eps is not
+            used for rank selection.
 
     Returns:
         A NUFFT2Plan instance that can be called on nonuniform samples c.
 
     Raises:
         ImportError: If SciPy is not available.
-        ValueError: If x is not one-dimensional.
+        ValueError: If x is not a 1D array, if eps is not positive, or if K is
+            provided but less than 1.
     """
     _require_scipy()
 
@@ -453,33 +431,50 @@ def plan_nufft2(x: ArrayLike, eps: float) -> NUFFT2Plan:
     if x_arr.ndim != 1:
         raise ValueError("x must be a 1D array")
 
+    eps_f = float(eps)
+    if eps_f <= 0:
+        raise ValueError("eps must be positive")
+
     N = x_arr.size
     t = assign_closest_equispaced_fftpoint(x_arr)
-    gamma = perturbation_parameter(x_arr, assign_closest_equispaced_gridpoint(x_arr))
-    K = find_k(gamma, eps)
 
-    U = construct_u(x_arr, K)
-    V = construct_v(N, K)
+    if K is None:
+        gamma = perturbation_parameter(
+            x_arr, assign_closest_equispaced_gridpoint(x_arr)
+        )
+        K_sel = find_k(gamma, eps_f)
+    else:
+        K_sel = int(K)
+        if K_sel < 1:
+            raise ValueError("K must be >= 1")
 
-    return NUFFT2Plan(x=x_arr, eps=float(eps), U=U, V=V, t=t, N=N, K=K)
+    U = construct_u(x_arr, K_sel)
+    V = construct_v(N, K_sel)
+
+    return NUFFT2Plan(x=x_arr, eps=eps_f, U=U, V=V, t=t, N=N, K=K_sel)
 
 
-def nufft2(c: ArrayLike, x: ArrayLike, eps: float) -> np.ndarray:
-    """
-    Compute the 1D nonuniform-to-uniform Fourier transform using low-rank factors.
+def nufft2(c: ArrayLike, x: ArrayLike, eps: float, K: Optional[int] = None) -> np.ndarray:
+    """ Compute the 1D nonuniform-to-uniform Fourier transform using low-rank factors.
 
-    This routine evaluates
-        f_k = sum_{j=0}^{N-1} c_j * exp(-2*pi*i*x_j*k),  k = 0,...,N-1,
-    by constructing a NUFFT2Plan for the provided nodes and applying it to the
-    sample values.
+    This convenience wrapper constructs a NUFFT2Plan via plan_nufft2 and applies
+    it to the provided nonuniform samples.
 
     Args:
-        c: Nonuniform samples c_j, provided as an array of shape (N,) or (N, M).
-        x: Nonuniform nodes x_j, provided as a one-dimensional array-like of shape (N,).
-        eps: Target accuracy used to select the low-rank rank.
+        c: Nonuniform samples c_j. Either a one-dimensional array of shape (N,)
+            or a two-dimensional array of shape (N, M).
+        x: One-dimensional array-like of real-valued nonuniform nodes (shape (N,)).
+        eps: Target accuracy used to select the rank K (must be positive).
+        K: Optional manual rank override (must be >= 1). If provided, eps is not
+            used for rank selection.
 
     Returns:
-        A complex NumPy array of uniform Fourier modes with shape (N,) if c is
-        one-dimensional, or (N, M) if c is two-dimensional.
+        A complex NumPy array of Fourier modes. Shape (N,) if c is 1D, or
+        (N, M) if c is 2D.
+
+    Raises:
+        ImportError: If SciPy is not available.
+        ValueError: If inputs violate the requirements enforced by plan_nufft2
+            or by NUFFT2Plan.__call__.
     """
-    return plan_nufft2(x, eps)(c)
+    return plan_nufft2(x, eps, K=K)(c)

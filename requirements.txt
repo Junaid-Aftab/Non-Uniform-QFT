@@ -1,6 +1,0 @@
-numpy 
-scipy
-matplotlib
-seaborn
-qiskit>=1.0
-qiskit-aer>=0.13

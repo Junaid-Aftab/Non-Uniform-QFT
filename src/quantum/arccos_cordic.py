@@ -1,32 +1,40 @@
 """
-    Construct a fully-quantum circuit that computes arccos(x) from signed-magnitude input.
+Arccos from signed-magnitude input (fully quantum)
+--------------------------------------------------
+This module builds a fully-quantum circuit that computes arccos(x) from a
+signed-magnitude fixed-point input.
 
-    The input x is provided as a signed-magnitude fixed-point number:
-      - magReg (m qubits) encodes the magnitude |x| as an unsigned fixed-point value
-        |x| = u / 2^(m-1), so |x| ∈ [0, 1).
-      - signQ (1 qubit) encodes the sign: |0⟩ means x ≥ 0, |1⟩ means x < 0.
+The input x is provided as a signed-magnitude fixed-point number:
+  - magReg (m qubits) encodes the magnitude |x| as an unsigned fixed-point
+    value |x| = u / 2^(m-1), so |x| ∈ [0, 1).
+  - signQ (1 qubit) encodes the sign: |0⟩ means x ≥ 0, |1⟩ means x < 0.
 
-    The circuit outputs an unsigned fixed-point approximation of arccos(x):
-      - thetaReg (w = p + 3 qubits) stores an UNSIGNED integer approximating arccos(x) · 2^p.
-        The represented real angle is approximately int(thetaReg) / 2^p. Since arccos(x) ∈ [0, π],
-        the output is always nonnegative; the extra 3 bits provide headroom to avoid modular wrap.
+The circuit outputs an unsigned fixed-point approximation of arccos(x):
+  - thetaReg (w = p + 3 qubits) stores an UNSIGNED integer approximating
+    arccos(x) · 2^p. The represented angle is approximately
+    int(thetaReg) / 2^p. Since arccos(x) ∈ [0, π], the output is always
+    nonnegative; the extra 3 bits provide headroom to avoid modular wrap.
 
-    Method:
-      1) Map magReg into the CORDIC input register tReg at width n = p + 1 via a power-of-two shift,
-         implementing t = u · 2^(p-m) (with truncation if p < m).
-      2) Run a fully-quantum CORDIC arcsin core to produce direction bits dReg encoding asin(|x|).
-         Optionally uncompute CORDIC work registers (leaving dReg intact) to clean ancillas.
-      3) Accumulate arccos(x) from π/2 and the CORDIC micro-rotation constants using ripple-carry
-         constant adders, implementing:
-             arccos(x) = π/2 - asin(x)
-                      = π/2 - asin(|x|)   if signQ = 0
-                        π/2 + asin(|x|)   if signQ = 1.
+Method:
+  1) Map magReg into the CORDIC input register tReg at width n = p + 1 via
+     a power-of-two shift, implementing t = u · 2^(p-m) (with truncation if
+     p < m).
+  2) Run a fully-quantum CORDIC arcsin core to produce direction bits dReg
+     encoding asin(|x|). Optionally uncompute CORDIC work registers (leaving
+     dReg intact) to clean ancillas.
+  3) Accumulate arccos(x) from π/2 and the CORDIC micro-rotation constants
+     using ripple-carry constant adders, implementing:
+         arccos(x) = π/2 - asin(x)
+                  = π/2 - asin(|x|)   if signQ = 0
+                    π/2 + asin(|x|)   if signQ = 1.
 
-    Notes:
-      - Fully quantum: no measurements are used.
-      - Uses CDKMRippleCarryAdder(kind="fixed") to add precomputed constants into thetaReg.
-      - The accumulation step flips signQ during constant-add selection (and flips it back) to match
-        the tested sign convention described in the implementation comments.
+Notes:
+  - Fully quantum: no measurements are used.
+  - Uses CDKMRippleCarryAdder(kind="fixed") to add precomputed constants
+    into thetaReg.
+  - The accumulation step flips signQ during constant-add selection (and
+    flips it back) to match the tested sign convention described in the
+    implementation comments.
 """
 
 from __future__ import annotations
@@ -45,22 +53,23 @@ from qiskit.circuit.library import CDKMRippleCarryAdder
 # =============================================================================
 
 def _rname(register: Union[QuantumRegister, Sequence]) -> str:
-    """
-    Return the name of the underlying QuantumRegister.
+    """Return the name of the underlying QuantumRegister.
 
     Args:
         register: A QuantumRegister or a sequence of qubits belonging to one.
 
     Returns:
         The register name as a string.
+
+    Raises:
+        None.
     """
     return register[0]._register.name
 
 
 @cache
 def fib(i: int) -> int:
-    """
-    Compute the i-th Fibonacci number.
+    """Compute the i-th Fibonacci number.
 
     This sequence is used by the multiplication routine to determine
     shift-and-add schedules.
@@ -70,6 +79,9 @@ def fib(i: int) -> int:
 
     Returns:
         The i-th Fibonacci number.
+
+    Raises:
+        None.
     """
     # Fibonacci numbers as used by the provided multiplication routine.
     return int(
@@ -84,8 +96,7 @@ def fib(i: int) -> int:
 
 
 def _int_to_twos_comp(val: int, width: int) -> int:
-    """
-    Convert a signed integer to its two's-complement representation.
+    """Convert a signed integer to its two's-complement representation.
 
     The result is returned as an unsigned integer in the range [0, 2^width).
 
@@ -95,13 +106,19 @@ def _int_to_twos_comp(val: int, width: int) -> int:
 
     Returns:
         Unsigned integer encoding val modulo 2^width.
+
+    Raises:
+        None.
     """
     return val % (1 << width)
 
 
-def _xor_load_constant(circ: QuantumCircuit, reg: QuantumRegister, const_unsigned: int) -> None:
-    """
-    Load or unload a classical constant into a quantum register using XOR.
+def _xor_load_constant(
+    circ: QuantumCircuit,
+    reg: QuantumRegister,
+    const_unsigned: int
+) -> None:
+    """Load or unload a classical constant into a quantum register using XOR.
 
     This routine maps |0⟩ → |const⟩ (and vice versa) by applying X gates to
     qubits corresponding to 1-bits in the little-endian binary expansion.
@@ -110,6 +127,12 @@ def _xor_load_constant(circ: QuantumCircuit, reg: QuantumRegister, const_unsigne
         circ: QuantumCircuit to modify.
         reg: Target quantum register.
         const_unsigned: Unsigned integer constant to load.
+
+    Returns:
+        None.
+
+    Raises:
+        None.
     """
     for i in range(len(reg)):
         if (const_unsigned >> i) & 1:
@@ -124,12 +147,10 @@ def additionGate(
     xReg: Union[QuantumRegister, Sequence],
     yReg: Union[QuantumRegister, Sequence],
 ) -> Gate:
-    """
-    Construct an in-place quantum addition gate.
+    """Construct an in-place quantum addition gate.
 
-    Implements the mapping:
-        (x, y) → (x + y, y)
-    using a two's-complement–friendly ripple-carry construction.
+    Implements the mapping (x, y) → (x + y, y) using a two's-complement–friendly
+    ripple-carry construction.
 
     Args:
         xReg: Quantum register holding the addend and output sum.
@@ -137,9 +158,15 @@ def additionGate(
 
     Returns:
         A Gate implementing in-place addition on xReg.
+
+    Raises:
+        None.
     """
     n = min(len(xReg), len(yReg))
-    circuit = QuantumCircuit(xReg, yReg, name=f"({_rname(xReg)}+{_rname(yReg)},{_rname(yReg)})")
+    circuit = QuantumCircuit(
+        xReg, yReg,
+        name=f"({_rname(xReg)}+{_rname(yReg)},{_rname(yReg)})"
+    )
 
     # Step 1
     for i in range(1, n):
@@ -170,11 +197,9 @@ def additionGate(
 
 
 def shiftAdditionGate(xReg: QuantumRegister, yReg: QuantumRegister, rshift: int = 1) -> Gate:
-    """
-    Construct an in-place shifted addition gate.
+    """Construct an in-place shifted addition gate.
 
-    Implements the mapping:
-        (x, y) → (x + (y >> rshift), y)
+    Implements the mapping (x, y) → (x + (y >> rshift), y).
 
     Args:
         xReg: Quantum register receiving the shifted sum.
@@ -183,9 +208,13 @@ def shiftAdditionGate(xReg: QuantumRegister, yReg: QuantumRegister, rshift: int 
 
     Returns:
         A Gate implementing the shifted addition.
+
+    Raises:
+        None.
     """
     circuit = QuantumCircuit(
-        xReg, yReg, name=f"({_rname(xReg)}+{_rname(yReg)}/{1<<rshift},{_rname(yReg)})"
+        xReg, yReg,
+        name=f"({_rname(xReg)}+{_rname(yReg)}/{1 << rshift},{_rname(yReg)})"
     )
 
     circuit.append(
@@ -204,13 +233,17 @@ def shiftAdditionGate(xReg: QuantumRegister, yReg: QuantumRegister, rshift: int 
     return circuit.to_gate()
 
 
-def multGate(xReg: QuantumRegister, aux: QuantumRegister, m: int, gate: bool = True) -> Union[Gate, QuantumCircuit]:
-    """
-    Multiply a register by (1 + 2^{-m}) in place.
+def multGate(
+    xReg: QuantumRegister,
+    aux: QuantumRegister,
+    m: int,
+    gate: bool = True
+) -> Union[Gate, QuantumCircuit]:
+    """Multiply a register by (1 + 2^{-m}) in place.
 
-    The multiplication is implemented via a sequence of controlled
-    shift-add operations using an auxiliary register, following the
-    provided Fibonacci-based schedule.
+    The multiplication is implemented via a sequence of controlled shift-add
+    operations using an auxiliary register, following the provided
+    Fibonacci-based schedule.
 
     Args:
         xReg: Quantum register holding the multiplicand and result.
@@ -220,9 +253,12 @@ def multGate(xReg: QuantumRegister, aux: QuantumRegister, m: int, gate: bool = T
 
     Returns:
         A Gate or QuantumCircuit implementing the multiplication.
+
+    Raises:
+        None.
     """
     n = len(xReg)
-    circuit = QuantumCircuit(xReg, aux, name=f"{_rname(xReg)}(1+1/{1<<m})")
+    circuit = QuantumCircuit(xReg, aux, name=f"{_rname(xReg)}(1+1/{1 << m})")
 
     numIter = 2 * int(0.5 * np.sqrt(5) * n / ((1 + np.sqrt(5)) / 2) ** (m))
 
@@ -238,12 +274,14 @@ def multGate(xReg: QuantumRegister, aux: QuantumRegister, m: int, gate: bool = T
         negative = (fib(i) % 2 == 1)
         if i % 2 == 0:
             circuit.append(
-                shiftAdditionGate(xReg, aux, m * fib(i)) if negative else shiftAdditionGate(xReg, aux, m * fib(i)).inverse(),
+                shiftAdditionGate(xReg, aux, m * fib(i)) if negative
+                else shiftAdditionGate(xReg, aux, m * fib(i)).inverse(),
                 xReg[:] + aux[:],
             )
         else:
             circuit.append(
-                shiftAdditionGate(aux, xReg, m * fib(i)) if negative else shiftAdditionGate(aux, xReg, m * fib(i)).inverse(),
+                shiftAdditionGate(aux, xReg, m * fib(i)) if negative
+                else shiftAdditionGate(aux, xReg, m * fib(i)).inverse(),
                 aux[:] + xReg[:],
             )
 
@@ -264,11 +302,10 @@ def quantumCORDIC(
     dReg: QuantumRegister,
     gate: bool = True,
 ) -> Union[Gate, QuantumCircuit]:
-    """
-    Execute the fully-quantum CORDIC routine for arcsin.
+    """Execute the fully-quantum CORDIC routine for arcsin.
 
-    The routine computes direction bits dReg encoding asin(t / 2^(n-2))
-    while updating internal working registers.
+    The routine computes direction bits dReg encoding asin(t / 2^(n-2)) while
+    updating internal working registers.
 
     Args:
         tReg: Input register encoding the scaled argument.
@@ -280,6 +317,9 @@ def quantumCORDIC(
 
     Returns:
         A Gate or QuantumCircuit implementing the CORDIC arcsin core.
+
+    Raises:
+        None.
     """
     n = len(tReg)
     circuit = QuantumCircuit(tReg, xReg, yReg, multReg, dReg, name="asin(t)")
@@ -324,11 +364,10 @@ def invRepairCORDIC(
     dReg: QuantumRegister,
     gate: bool = True,
 ) -> Union[Gate, QuantumCircuit]:
-    """
-    Inverse repair routine for CORDIC ancillas.
+    """Construct the inverse repair routine for CORDIC ancillas.
 
-    This circuit uncomputes CORDIC work registers while preserving
-    the direction bits dReg.
+    This circuit uncomputes CORDIC work registers while preserving the
+    direction bits dReg.
 
     Args:
         tReg: Input register used by the CORDIC routine.
@@ -340,6 +379,9 @@ def invRepairCORDIC(
 
     Returns:
         A Gate or QuantumCircuit implementing the inverse repair.
+
+    Raises:
+        None.
     """
     n = len(tReg)
     circuit = QuantumCircuit(tReg, xReg, yReg, multReg, dReg, name="cleanAux+Input")
@@ -371,11 +413,10 @@ def repairCORDIC(
     dReg: QuantumRegister,
     gate: bool = True,
 ) -> Union[Gate, QuantumCircuit]:
-    """
-    Uncompute CORDIC ancillas after arcsin computation.
+    """Uncompute CORDIC ancillas after arcsin computation.
 
-    This applies the adjoint of the inverse repair routine, returning
-    all CORDIC work registers (except dReg) to |0⟩.
+    This applies the adjoint of the inverse repair routine, returning all
+    CORDIC work registers (except dReg) to |0⟩.
 
     Args:
         tReg: Input register used by the CORDIC routine.
@@ -387,6 +428,9 @@ def repairCORDIC(
 
     Returns:
         A Gate or QuantumCircuit implementing the repair operation.
+
+    Raises:
+        None.
     """
     circuit = QuantumCircuit(tReg, xReg, yReg, multReg, dReg, name="repair")
     circuit.append(
@@ -408,8 +452,7 @@ def _rca_add_constant(
     const_unsigned: int,
     ctrls: Optional[Union["qiskit.circuit.Qubit", List["qiskit.circuit.Qubit"]]] = None,
 ) -> None:
-    """
-    Add a classical constant into a quantum register using a ripple-carry adder.
+    """Add a classical constant into a quantum register using a ripple-carry adder.
 
     Performs in-place modular addition:
         thetaReg ← thetaReg + const_unsigned  (mod 2^w)
@@ -424,8 +467,12 @@ def _rca_add_constant(
         const_unsigned: Unsigned integer constant to add.
         ctrls: Optional control qubit or list of control qubits.
 
+    Returns:
+        None.
+
     Raises:
-        ValueError: If cReg does not match the width of thetaReg, or if helpQ is not 1 qubit.
+        ValueError: If cReg does not match the width of thetaReg, or if helpQ
+            is not 1 qubit.
     """
     w = len(thetaReg)
     if len(cReg) != w:
@@ -457,16 +504,21 @@ def _rca_add_constant(
 
 
 def _controlled_on_zero(circ: QuantumCircuit, ctrl_qubit, body_fn) -> None:
-    """
-    Execute an operation conditioned on a control qubit being |0⟩.
+    """Execute an operation conditioned on a control qubit being |0⟩.
 
-    This is implemented by temporarily flipping the control qubit,
-    executing the body, and flipping it back.
+    This is implemented by temporarily flipping the control qubit, executing
+    the body, and flipping it back.
 
     Args:
         circ: QuantumCircuit to modify.
         ctrl_qubit: Control qubit tested for the |0⟩ state.
         body_fn: Callable that appends operations to circ.
+
+    Returns:
+        None.
+
+    Raises:
+        None.
     """
     circ.x(ctrl_qubit)
     body_fn()
@@ -482,8 +534,7 @@ def build_arccos_signedmag_circuit(
     p: int,
     clean_cordic_ancillas: bool = True,
 ) -> QuantumCircuit:
-    """
-    Construct a fully-quantum circuit computing arccos(x) from signed-magnitude input.
+    """Construct a fully-quantum circuit computing arccos(x) from signed-magnitude input.
 
     The input x is represented by a magnitude register and a sign qubit:
       - magReg (m qubits): |x| = u / 2^(m-1), with |x| ∈ [0, 1).
@@ -503,6 +554,9 @@ def build_arccos_signedmag_circuit(
 
     Returns:
         A QuantumCircuit on all required registers implementing arccos(x).
+
+    Raises:
+        None.
     """
     n = p + 1          # CORDIC width
     w = p + 3          # output width headroom so [0, π] does not wrap mod 2^w
@@ -520,7 +574,10 @@ def build_arccos_signedmag_circuit(
     cReg = QuantumRegister(w, name="c")      # constant scratch
     helpQ = QuantumRegister(1, name="h")     # CDKM helper
 
-    circ = QuantumCircuit(magReg, signQ, tReg, xReg, yReg, multReg, dReg, thetaReg, cReg, helpQ, name="arccos_smag")
+    circ = QuantumCircuit(
+        magReg, signQ, tReg, xReg, yReg, multReg, dReg, thetaReg, cReg, helpQ,
+        name="arccos_smag"
+    )
 
     # -------------------------------------------------------------------------
     # 1) Map magReg into tReg (nonnegative; no sign-extension)
@@ -558,17 +615,6 @@ def build_arccos_signedmag_circuit(
 
     # -------------------------------------------------------------------------
     # 3) Convert direction bits into arccos(x) with sign-qubit selection
-    #
-    # arccos(x) = π/2 - asin(x)
-    #          = π/2 - asin(|x|)   if sign=0
-    #            π/2 + asin(|x|)   if sign=1
-    #
-    # We accumulate micro-angles alpha_i = 2*atan(2^{-i}) at scale 2^p.
-    # dReg convention matches the original snippet.
-    #
-    # IMPORTANT FIX:
-    # The sign-controlled branches are swapped relative to the measured behavior in testing,
-    # so we flip signQ during the accumulation and flip it back afterwards.
     # -------------------------------------------------------------------------
     scale = 1 << p
     pi_over_2_int = int(np.round((np.pi / 2) * scale))

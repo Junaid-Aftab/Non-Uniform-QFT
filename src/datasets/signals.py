@@ -14,9 +14,9 @@ import scipy.fft as sfft
 def signal_random_complex(
     N: int,
     rng: np.random.Generator | None = None,
-    normalize: bool = True) -> np.ndarray:
-    """
-    Generate a random complex-valued signal of length N.
+    normalize: bool = True
+) -> np.ndarray:
+    """ Generate a random complex-valued signal of length N.
 
     The signal entries are drawn independently from a complex Gaussian
     distribution with independent real and imaginary parts:
@@ -35,6 +35,9 @@ def signal_random_complex(
     Returns:
         A one-dimensional NumPy array of length N containing a complex-valued
         random signal.
+
+    Raises:
+        None.
     """
     rng = np.random.default_rng() if rng is None else rng
 
@@ -49,8 +52,7 @@ def signal_random_complex(
 
 
 def signal_smooth_from_nodes(t: np.ndarray) -> np.ndarray:
-    """
-    Construct a deterministic smooth complex signal evaluated at sample nodes.
+    """ Construct a deterministic smooth complex signal evaluated at sample nodes.
 
     The signal is defined as a superposition of two complex exponentials:
         exp(2πi · 3 · t) + 0.2 · exp(−2πi · 7 · t).
@@ -64,6 +66,9 @@ def signal_smooth_from_nodes(t: np.ndarray) -> np.ndarray:
 
     Returns:
         A NumPy array of complex values representing the signal evaluated at t.
+
+    Raises:
+        None.
     """
     t = np.asarray(t, dtype=float)
 
@@ -73,9 +78,9 @@ def signal_smooth_from_nodes(t: np.ndarray) -> np.ndarray:
 def signal_sparse_spectrum(
     N: int,
     sparsity: int = 5,
-    rng: np.random.Generator | None = None) -> np.ndarray:
-    """
-    Generate a length-N complex signal with a sparse Fourier spectrum.
+    rng: np.random.Generator | None = None
+) -> np.ndarray:
+    """ Generate a length-N complex signal with a sparse Fourier spectrum.
 
     The construction proceeds as follows:
     1) Initialize a Fourier-domain vector with all entries equal to zero.
@@ -95,6 +100,9 @@ def signal_sparse_spectrum(
     Returns:
         A one-dimensional NumPy array of length N containing a complex-valued
         signal with sparse frequency content.
+
+    Raises:
+        None.
     """
     rng = np.random.default_rng() if rng is None else rng
 

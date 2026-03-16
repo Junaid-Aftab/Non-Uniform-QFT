@@ -15,8 +15,7 @@ def nudft_type2_dense(
     x: np.ndarray,
     K: int | None = None,
 ) -> np.ndarray:
-    """
-    Compute the Type-II nonuniform discrete Fourier transform (NUDFT).
+    """ Compute the Type-II nonuniform discrete Fourier transform (NUDFT).
 
     This routine evaluates the transform
         X_k = sum_{j=0}^{N-1} x_j * exp(-2π i k t_j),  for k = 0, ..., K-1
