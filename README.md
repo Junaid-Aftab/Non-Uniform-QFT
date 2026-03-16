@@ -3,15 +3,6 @@
 ## Project Description
 The NUQFT generalizes the standard Quantum Fourier Transform by relaxing the assumption of uniformly spaced inputs in signal or frequency domains. This repository focuses on the numerical implementation and evaluation of the proposed NUQFT algorithm, including simulations, validation experiments, and performance analysis.
 
-## Overview
-**Non-Uniform-QFT** is a research-oriented codebase for experimenting with numerical and computational ideas related to **Quantum Field Theory (QFT)** on **non-uniform discretizations** of space or spacetime.
-
-The repository provides tools and exploratory notebooks for studying field behavior when the underlying lattice or grid spacing is **non-uniform**, enabling investigation of problems where adaptive resolution or irregular geometries are useful.
-
-The project is intended primarily for **research, experimentation, and educational exploration** rather than as a production-ready physics framework.
-
----
-
 ## Features
 
 - Numerical experimentation with **non-uniform spatial grids**
