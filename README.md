@@ -6,11 +6,11 @@ The Non-Uniform Quantum Fourier Transform (NUQFT) generalizes the Quantum Fourie
 
 This repository implements our NUQFT algorithm and includes:
 
-- **Classical NUDFT baseline:** dense implementation of the Type-II Non-Uniform Discrete Fourier Transform (NUDFT) used for correctness checks and small-scale validation.
+- **Classical NUDFT implementations:** reference routines for computing the Non-Uniform Discrete Fourier Transform (NUDFT), used as baselines for validation and comparison.
 
-- **Low-rank NUFFT approximation:** implements a nonuniform-to-uniform Fourier transform using low-rank factorization to approximate the NUDFT operator efficiently.
+- **Efficient NUFFT-style approximations:** methods that approximate the non-uniform Fourier transform using structured or low-rank factorizations.
 
-- **Quantum NUQFT construction:** builds the quantum primitives (e.g., unitary $U_r$ and $V_r$) and supporting routines such as matrix synthesis and CORDIC-based angle computation.
+- **Quantum NUQFT components:** modules implementing the quantum version of the transform along with supporting numerical routines required by the algorithm.
 
 - **Experiment and utility modules:** includes signal generation, data utilities, and scripts for testing numerical behavior and conditioning of the transform.
 
