@@ -12,7 +12,7 @@ This repository implements the NUQFT algorithm and includes the following compon
 
 - **NUQFT:** Modules implementing the NUQFT and supporting numerical routines required by the algorithm.
 
-%- **Experimental Modules:** Tools for signal generation, data handling, and scripts for testing numerical behavior of the NUQFT.
+<!-- - **Experimental Modules:** Tools for signal generation, data handling, and scripts for testing numerical behavior of the NUQFT. -->
 
 ## Directory Structure
 
