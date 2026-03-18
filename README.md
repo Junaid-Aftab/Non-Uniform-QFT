@@ -27,7 +27,7 @@ If you use this repository in academic work, please cite the following paper:
 
 
 
-### Problem Statement
+## Problem Statement
 
 The classical **Discrete Fourier Transform (DFT)** assumes signals are sampled at **uniform locations**. However, real-world data often arises from **non-uniform sampling**, due to:
 
@@ -39,9 +39,9 @@ To address this, the **Non-Uniform Discrete Fourier Transform (NUDFT)** computes
 
 Mathematically, given samples
 
-\[
+$
 x_j = f(t_j)
-\]
+$
 
 taken at non-uniform points \(t_j\), the NUDFT computes
 
