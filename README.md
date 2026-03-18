@@ -8,7 +8,7 @@ This repository implements the NUQFT algorithm and includes the following compon
 
 - **NUDFT:** Reference routines for computing the NUDFT, used for validation and performance benchmarking.
 
-- **NUFFT:** Algorithm that approximate the NUDFT using low-rank approximation to improve computational efficiency.
+- **NUFFT:** Low-rank approximation algorithm for NUDFT to improve computational efficiency.
 
 - **NUQFT:** Modules implementing the NUQFT and supporting numerical routines required by the algorithm.
 
