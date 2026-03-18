@@ -8,11 +8,11 @@ This repository implements the NUQFT algorithm and includes the following compon
 
 - **Classical NUDFT:** Reference routines for computing the NUDFT, used for validation and performance benchmarking.
 
-- **Efficient NUFFT:** NUFFT algorithm that approximate the NUDFT using structured or low-rank factorizations to improve computational efficiency.
+- **Efficient NUFFT:** NUFFT algorithm that approximate the NUDFT using low-rank approximation to improve computational efficiency.
 
-- **NUQFT Components:** Modules implementing the quantum transform and supporting numerical routines required by the algorithm.
+- **NUQFT Components:** Modules implementing the NUQFT and supporting numerical routines required by the algorithm.
 
-- **Experimental Modules:** Tools for signal generation, data handling, and scripts for testing numerical behavior and conditioning of the transform.
+- **Experimental Modules:** Tools for signal generation, data handling, and scripts for testing numerical behavior of the NUQFT.
 
 ## Directory Structure
 
