@@ -39,35 +39,7 @@ $$
 
 The frequencies $\omega_k$ may also be non-uniform.
 
-Equivalently, the transform can be written as a matrix–vector multiplication
-
-$$
-\left(
-\begin{matrix}
-X_0 \\
-X_1 \\
-\vdots \\
-X_{N-1}
-\end{matrix}
-\right)
-=
-\left(
-\begin{matrix}
-e^{-i \omega_0 t_0} & e^{-i \omega_0 t_1} & \cdots & e^{-i \omega_0 t_{N-1}} \\
-e^{-i \omega_1 t_0} & e^{-i \omega_1 t_1} & \cdots & e^{-i \omega_1 t_{N-1}} \\
-\vdots & \vdots & \ddots & \vdots \\
-e^{-i \omega_{N-1} t_0} & e^{-i \omega_{N-1} t_1} & \cdots & e^{-i \omega_{N-1} t_{N-1}}
-\end{matrix}
-\right)
-\left(
-\begin{matrix}
-x_0 \\
-x_1 \\
-\vdots \\
-x_{N-1}
-\end{matrix}
-\right)
-$$
+Equivalently, the transform can be written as a matrix–vector multiplication $\vec X = F_{NU} \vec x$
 
 where the matrix entries are
 
