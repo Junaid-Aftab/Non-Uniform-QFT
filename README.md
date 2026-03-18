@@ -6,11 +6,11 @@ In many signal processing and scientific computing applications, measurements ar
 
 This repository implements the NUQFT algorithm and includes the following components:
 
-- **Classical NUDFT:** Reference routines for computing the NUDFT, used for validation and performance benchmarking.
+- **NUDFT:** Reference routines for computing the NUDFT, used for validation and performance benchmarking.
 
-- **Efficient NUFFT:** NUFFT algorithm that approximate the NUDFT using low-rank approximation to improve computational efficiency.
+- **NUFFT:** NUFFT algorithm that approximate the NUDFT using low-rank approximation to improve computational efficiency.
 
-- **NUQFT Components:** Modules implementing the NUQFT and supporting numerical routines required by the algorithm.
+- **NUQFT:** Modules implementing the NUQFT and supporting numerical routines required by the algorithm.
 
 - **Experimental Modules:** Tools for signal generation, data handling, and scripts for testing numerical behavior of the NUQFT.
 
