@@ -33,7 +33,7 @@ $$
 X_k = \sum_{j=0}^{N-1} x_j e^{-i \omega_k t_j}
 $$
 
-where the frequencies \( \omega_k \) may also be non-uniform.
+where the frequencies $\omega_k$ may also be non-uniform.
 
 While efficient classical algorithms exist for this transform, a fully quantum analogue has not been systematically developed. This project implements and evaluates a quantum algorithm that approximates the NUDFT using low-rank structure and block-encoding techniques.
 
