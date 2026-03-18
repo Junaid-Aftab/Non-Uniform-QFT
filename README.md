@@ -4,23 +4,21 @@
 
 The Non-Uniform Quantum Fourier Transform (NUQFT) generalizes the Quantum Fourier Transform (QFT) to data sampled on non-uniform grids. Many signal processing and scientific computing applications involve irregular sampling, where the standard Discrete Fourier Transform (DFT) cannot be applied directly.
 
-This repository implements our NUQFT algorithm and includes:
+- **Classical NUDFT baseline:** dense implementation of the Type-II Non-Uniform Discrete Fourier Transform (NUDFT) used for correctness checks and small-scale validation.
 
-- **Classical baselines for non-uniform Fourier transforms:** includes a dense reference implementation of the Type-II Non-Uniform Discrete Fourier Transform (NUDFT) used primarily for correctness verification and small-scale experiments.
+- **Low-rank NUFFT approximation:** implements a nonuniform-to-uniform Fourier transform using low-rank factorization to approximate the NUDFT operator efficiently.
 
-- **Low-rank NUFFT approximation:** implements a classical nonuniform-to-uniform Fourier transform using a low-rank matrix factorization approach (adapted from FastTransforms), providing a more efficient approximation of the NUDFT operator.
+- **Quantum NUQFT construction:** builds the quantum primitives (e.g., unitary $U_r$ and $V_r$) and supporting routines such as matrix synthesis and CORDIC-based angle computation.
 
-- **Quantum NUQFT construction via unitary factorization:** contains modules that build the quantum primitives underlying the algorithm (e.g., unitary \(U_r\) and \(V_r\), matrix synthesis routines, and CORDIC-based angle computation) used to represent the non-uniform Fourier transform as quantum-implementable unitary operations.
-
-- **Supporting utilities, datasets, and validation code:** provides signal generation utilities, data handling, and test scripts used to run numerical experiments and validate the behavior of the classical and quantum components.
+- **Experiment and utility modules:** includes signal generation, data utilities, and scripts for testing numerical behavior and conditioning of the transform.
 
 ## Directory Notes
 
-- `src/classical/` contains classical numerical implementations, including NUDFT-II and low-rank NUFFT-II routines.
-- `src/quantum/` contains the quantum-oriented components of the project, including unitary constructions, matrix routines, and the main `nuqft.py` module.
-- `src/datasets/` contains helper code for data generation and signal construction.
-- `tests/` is notebook-driven and serves as the main experimentation and validation area.
-- `tests/figures/` stores generated plots and exported results associated with the notebooks.
+- `src/classical/` classical implementations of NUDFT-II and low-rank NUFFT-II.
+- `src/quantum/` quantum components, including unitary constructions and the main `nuqft.py`.
+- `src/datasets/` utilities for data and signal generation.
+- `tests/` notebooks for experiments and validation.
+- `tests/figures/` generated plots and exported results.
 
 ## Citation
 
