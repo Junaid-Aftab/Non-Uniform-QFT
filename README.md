@@ -11,20 +11,6 @@ This repository provides a numerical and algorithmic implementation of the NUQFT
 - Numerical experiments validating the low-rank structure of the NUDFT kernel
 - Experiments analyzing precision scaling and conditioning effects
 
-If you use this repository, please cite the following paper:
-
-```bibtex
-@misc{aftab2026nonuniformquantumfouriertransform,
-  title={Non-Uniform Quantum Fourier Transform},
-  author={Junaid Aftab and Yuehaw Khoo and Haizhao Yang},
-  year={2026},
-  eprint={2602.13472},
-  archivePrefix={arXiv},
-  primaryClass={quant-ph},
-  url={https://arxiv.org/abs/2602.13472}
-}
-```
-
 
 # Non-Uniform Discrete Fourier Transform (NUDFT)
 
