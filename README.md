@@ -48,10 +48,7 @@ For the Type–II NUDFT, where the frequencies are uniform but the spatial sampl
 If the non-uniform grid points are close to a uniform grid, one can write $t_j = \frac{j}{N} + \delta_j$, where $\delta_j$ represents a small perturbation. Substituting this into the exponential yields
 
 $$
-e^{-2\pi i t_j k}
-=
-e^{-2\pi i (t_j - j/N)k}
-e^{-2\pi i jk/N}.
+e^{-2\pi i t_j k}=e^{-2\pi i (t_j - j/N)k}e^{-2\pi i jk/N}.
 $$
 
 This leads to the matrix decomposition
