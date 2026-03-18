@@ -27,31 +27,33 @@ If you use this repository in academic work, please cite the following paper:
 
 
 
+
 ## Problem Statement
 
-The classical **Discrete Fourier Transform (DFT)** assumes signals are sampled at **uniform locations**. However, real-world data often arises from **non-uniform sampling**, due to:
+The classical Discrete Fourier Transform (DFT) assumes signals are sampled at uniform locations. However, real-world data often arises from non-uniform sampling, due to:
 
 - irregular measurement grids  
 - adaptive numerical methods  
 - physical constraints in sensing systems  
 
-To address this, the **Non-Uniform Discrete Fourier Transform (NUDFT)** computes Fourier coefficients from non-uniform spatial samples.
+To address this, the Non-Uniform Discrete Fourier Transform (NUDFT) computes Fourier coefficients from non-uniform spatial samples.
 
 Mathematically, given samples
 
-$
+$$
 x_j = f(t_j)
-$
+$$
 
-taken at non-uniform points \(t_j\), the NUDFT computes
+taken at non-uniform points $t_j$, the NUDFT computes
 
-\[
+$$
 X_k = \sum_{j=0}^{N-1} x_j e^{-i \omega_k t_j}
-\]
+$$
 
-where the frequencies \(\omega_k\) may also be non-uniform. :contentReference[oaicite:1]{index=1}
+where the frequencies $\omega_k$ may also be non-uniform.
 
-While efficient classical algorithms exist for this transform, a **fully quantum analogue had not been systematically developed**. This project implements and evaluates a quantum algorithm that approximates the NUDFT using **low-rank structure and block-encoding techniques**.
+While efficient classical algorithms exist for this transform, a fully quantum analogue had not been systematically developed. This project implements and evaluates a quantum algorithm that approximates the NUDFT using low-rank structure and block-encoding techniques.
+
 
 ---
 
