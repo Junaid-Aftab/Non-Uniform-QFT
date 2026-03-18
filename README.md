@@ -2,14 +2,14 @@
 
 ## Overview
 
-The Non-Uniform Quantum Fourier Transform (NUQFT) generalizes the Quantum Fourier Transform (QFT) to cases where sampling points are not uniformly spaced. Many practical signal processing and scientific computing problems involve irregular sampling grids, making the classical Discrete Fourier Transform (DFT) unsuitable without modification.
+The Non-Uniform Quantum Fourier Transform (NUQFT) extends the Quantum Fourier Transform (QFT) to data sampled at non-uniform intervals. Many practical signal processing and scientific computing tasks involve irregular sampling grids, where the standard Discrete Fourier Transform (DFT) cannot be applied directly without modification.
 
-This repository provides a numerical and algorithmic implementation of our NUQFT, algorithm including
+This repository provides a numerical and algorithmic implementation of the NUQFT algorithm, including:
 
-- classical implementations of the Non-Uniform Discrete Fourier Transform (NUDFT)
-- simulation of the quantum unitary primitives required by the NUQFT algorithm
-- numerical experiments validating the low-rank structure of the NUDFT kernel
-- experiments studying precision scaling and conditioning effects
+- Classical implementations of the Non-Uniform Discrete Fourier Transform (NUDFT)
+- Simulations of the quantum unitary primitives required for NUQFT
+- Numerical experiments validating the low-rank structure of the NUDFT kernel
+- Experiments analyzing precision scaling and conditioning effects
 
 If you use this repository, please cite the following paper:
 
@@ -30,17 +30,8 @@ If you use this repository, please cite the following paper:
 
 ## What is the NUDFT
 
-The classical Discrete Fourier Transform (DFT) assumes that a signal is sampled on a uniform grid. In many practical applications this assumption does not hold. Measurements may occur at irregular spatial locations due to physical constraints, adaptive numerical methods, or irregular geometries.
-
-The Non-Uniform Discrete Fourier Transform (NUDFT) generalizes the DFT to handle such non-uniform sampling.
-
-Given samples
-
-$$
-x_j = f(t_j)
-$$
-
-taken at non-uniform points $t_j$, the NUDFT computes Fourier coefficients
+The classical Discrete Fourier Transform (DFT) assumes uniformly spaced samples, an assumption often violated in practice due to irregular measurement locations or adaptive methods. The Non-Uniform Discrete Fourier Transform (NUDFT) extends the DFT to handle non-uniform sampling.
+Given samples $x_j = f(t_j)$ taken at non-uniform points $t_j$ on $\mathbb T$, the NUDFT computes Fourier coefficients
 
 $$
 X_k = \sum_{j=0}^{N-1} x_j e^{-i \omega_k t_j}.
