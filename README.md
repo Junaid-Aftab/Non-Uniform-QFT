@@ -11,11 +11,6 @@ This repository contains a numerical and algorithmic implementation of the our N
 - Quantum-oriented components that simulate the unitary primitives required by the algorithm
 - Experiments validating theoretical predictions such as low-rank structure and precision scaling
 
-The implementation accompanies the research work:
-
-**Non-Uniform Quantum Fourier Transform – Junaid Aftab, Yuehaw Khoo, Haizhao Yang**  
-https://arxiv.org/abs/2602.13472
-
 If you use this repository in academic work, please cite the following paper:
 
 ```bibtex
