@@ -2,24 +2,25 @@
 
 ## Overview
 
-The Non-Uniform Quantum Fourier Transform (NUQFT) extends the standard Quantum Fourier Transform (QFT) to settings where sampling points are not uniformly spaced. Many practical signal processing, imaging, and numerical simulation problems involve irregular sampling grids, making classical and quantum Fourier methods designed for uniform grids insufficient.
+The **Non-Uniform Quantum Fourier Transform (NUQFT)** extends the standard Quantum Fourier Transform (QFT) to settings where sampling points are **not uniformly spaced**. Many practical signal processing, imaging, and numerical simulation problems involve irregular sampling grids, making classical and quantum Fourier methods designed for uniform grids insufficient.
 
-This repository contains a numerical and algorithmic implementation of the NUQFT framework, including:
+This repository contains a **numerical and algorithmic implementation of the NUQFT framework**, including:
 
-- Classical reference implementations of the Non-Uniform Discrete Fourier Transform (NUDFT)
+- Classical reference implementations of the **Non-Uniform Discrete Fourier Transform (NUDFT)**
 - Low-rank factorization routines used to construct efficient NUQFT circuits
 - Quantum-oriented components that simulate the unitary primitives required by the algorithm
-- Experiments validating theoretical predictions such as low-rank structure and precision scaling
-
-
+- Experiments validating theoretical predictions such as **low-rank structure and precision scaling**
 
 The implementation accompanies the research work:
 
 **Non-Uniform Quantum Fourier Transform – Junaid Aftab, Yuehaw Khoo, Haizhao Yang**  
 https://arxiv.org/abs/2602.13472
 
-<details>
-<summary>BibTeX Citation</summary>
+---
+
+# Citation
+
+If you use this repository in academic work, please cite the following paper:
 
 ```bibtex
 @misc{aftab2026nonuniformquantumfouriertransform,
@@ -31,13 +32,6 @@ https://arxiv.org/abs/2602.13472
   primaryClass={quant-ph},
   url={https://arxiv.org/abs/2602.13472}
 }
-
-</details>
-
-
-
-The repository focuses on **numerical validation and prototype circuit construction** rather than direct execution on quantum hardware.
-
 
 
 
