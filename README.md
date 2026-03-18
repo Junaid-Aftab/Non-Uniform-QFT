@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Non-Uniform Quantum Fourier Transform (NUQFT) generalizes the Quantum Fourier Transform (QFT) to settings where data are sampled on non-uniform grids. In many signal processing and scientific computing applications, measurements are collected at irregular locations, making the standard Discrete Fourier Transform (DFT) unsuitable without additional processing.
+In many signal processing and scientific computing applications, measurements are collected at irregular locations, making the standard Discrete Fourier Transform (DFT) unsuitable without additional processing. The Non-Uniform Discrete Fourier Transform (NUDFT) generalizes the DFT to data sampled on non-uniform grids. We develop a  Non-Uniform Quantum Fourier Transform (NUQFT) algorithm that extends the Quantum Fourier Transform (QFT) to this non-uniform setting.
 
-This repository provides an implementation of the NUQFT algorithm and includes the following components:
+This repository provides an implementation of our NUQFT algorithm and includes the following components:
 
 - **Classical NUDFT implementations:** Reference routines for computing the Non-Uniform Discrete Fourier Transform (NUDFT). These implementations serve as baselines for validation and performance comparison.
 
