@@ -40,9 +40,11 @@ To address this, the Non-Uniform Discrete Fourier Transform (NUDFT) computes Fou
 
 Mathematically, given samples $x_j = f(t_j)$
 taken at non-uniform points $t_j$, the NUDFT computes
+
 $$
 X_k = \sum_{j=0}^{N-1} x_j e^{-i \omega_k t_j}
 $$
+
 where the frequencies $\omega_k$ may also be non-uniform.
 
 While efficient classical algorithms exist for this transform, a fully quantum analogue had not been systematically developed. This project implements and evaluates a quantum algorithm that approximates the NUDFT using low-rank structure and block-encoding techniques.
