@@ -27,7 +27,7 @@ If you use this repository, please cite the following paper:
 
 The classical Discrete Fourier Transform (DFT) assumes signals are sampled at uniform locations. However, real-world data often arises from non-uniform sampling due to irregular measurement grids, adaptive numerical methods, and similar settings. The Non-Uniform Discrete Fourier Transform (NUDFT) computes Fourier coefficients from non-uniform spatial samples.
 
-Mathematically, given samples \( x_j = f(t_j) \) taken at non-uniform points \( t_j \), the NUDFT computes
+Mathematically, given samples $x_j = f(t_j)$ taken at non-uniform points \( t_j \), the NUDFT computes
 
 $$
 X_k = \sum_{j=0}^{N-1} x_j e^{-i \omega_k t_j}
