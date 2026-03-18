@@ -50,11 +50,9 @@ where the frequencies $\omega_k$ may also be non-uniform.
 While efficient classical algorithms exist for this transform, a fully quantum analogue had not been systematically developed. This project implements and evaluates a quantum algorithm that approximates the NUDFT using low-rank structure and block-encoding techniques.
 
 
----
-
 # What This Project Does
 
-This repository provides a **computational framework for studying the NUQFT algorithm**, including:
+This repository provides a computational framework for studying the NUQFT algorithm, including:
 
 ### 1. Classical Baselines
 
@@ -78,8 +76,8 @@ Prototype implementations of the quantum primitives required by the NUQFT algori
 
 Notebook experiments validate theoretical predictions including:
 
-- **low-rank approximation accuracy**
-- **precision dependence on geometric parameters**
+- low-rank approximation accuracy
+- precision dependence on geometric parameters
 - correctness of intermediate unitary operators
 
 ### 4. Visualization and Analysis
@@ -94,26 +92,26 @@ The NUQFT algorithm is based on three key ideas.
 
 ## 1. Low-Rank Factorization of the NUDFT
 
-The NUDFT matrix can be approximated by a **low-rank decomposition**
+The NUDFT matrix can be approximated by a low-rank decomposition
 
-\[
+$$
 F_{II} \approx \sum_{r=0}^{K-1} D_{u_r} \, F \, D_{v_r}
-\]
+$$
 
 where:
 
-- \(F\) is the standard DFT matrix
-- \(D_{u_r}\) and \(D_{v_r}\) are diagonal matrices derived from Chebyshev expansions. :contentReference[oaicite:2]{index=2}
+- $F$ is the standard DFT matrix
+- $D_{u_r}$ and $D_{v_r}$ are diagonal matrices derived from Chebyshev expansions
 
-This decomposition converts the non-uniform Fourier transform into a **sum of structured operations involving standard Fourier transforms**.
+This decomposition converts the non-uniform Fourier transform into a sum of structured operations involving standard Fourier transforms.
 
 ---
 
 ## 2. Quantum Block-Encoding
 
-Each matrix term in the decomposition is embedded inside a **unitary operator** using block encoding. This enables quantum circuits to simulate matrix multiplication while preserving reversibility.
+Each matrix term in the decomposition is embedded inside a unitary operator using block encoding. This enables quantum circuits to simulate matrix multiplication while preserving reversibility.
 
-Block encoding is a central technique used in modern quantum linear algebra algorithms. :contentReference[oaicite:3]{index=3}
+Block encoding is a central technique used in modern quantum linear algebra algorithms.
 
 ---
 
@@ -121,11 +119,11 @@ Block encoding is a central technique used in modern quantum linear algebra algo
 
 The sum
 
-\[
+$$
 \sum_r D_{u_r} F D_{v_r}
-\]
+$$
 
-is implemented using the **Linear Combination of Unitaries (LCU)** framework, which constructs a quantum circuit representing weighted sums of unitary operators.
+is implemented using the Linear Combination of Unitaries (LCU) framework, which constructs a quantum circuit representing weighted sums of unitary operators.
 
 ---
 
@@ -133,11 +131,11 @@ is implemented using the **Linear Combination of Unitaries (LCU)** framework, wh
 
 The resulting NUQFT circuit achieves:
 
-- **Polylogarithmic scaling with precision**
-- **Quadratic dependence on number of qubits**
-- **Logarithmic dependence on geometry parameters**
+- Polylogarithmic scaling with precision
+- Quadratic dependence on number of qubits
+- Logarithmic dependence on geometry parameters
 
-These properties arise from the efficient low-rank structure and block-encoding formulation. :contentReference[oaicite:4]{index=4}
+These properties arise from the efficient low-rank structure and block-encoding formulation.
 
 ---
 
@@ -147,13 +145,13 @@ The experiments in this repository replicate several theoretical results from th
 
 ## Low-Rank Scaling
 
-The NUDFT kernel admits a **rapidly convergent low-rank approximation**, meaning only a small number of terms \(K\) are needed to approximate the transform with high precision.
+The NUDFT kernel admits a rapidly convergent low-rank approximation, meaning only a small number of terms $K$ are needed to approximate the transform with high precision.
 
 Observed behavior:
 
-\[
+$$
 K = O\left(\frac{\log(1/\epsilon)}{\log\log(1/\epsilon)}\right)
-\]
+$$
 
 Numerical experiments confirm this theoretical prediction.
 
