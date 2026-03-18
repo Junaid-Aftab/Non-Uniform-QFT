@@ -9,9 +9,9 @@ The Non-Uniform Quantum Fourier Transform (NUQFT) generalizes the Quantum Fourie
 This repository provides a numerical and algorithmic implementation of NUQFT, including:
 
 - Classical implementations of the Non-Uniform Discrete Fourier Transform (NUDFT)
-- Low-rank factorization methods for constructing efficient NUQFT circuits
-- Quantum-oriented simulations of the unitary primitives used by the algorithm
-- Experiments validating properties such as low-rank structure and precision scaling
+- Low-rank factorizations for efficient NUQFT circuits
+- Simulation of the algorithm’s quantum unitary primitives
+- Experiments validating low-rank structure and precision scaling
 
 If you use this repository in academic work, please cite the following paper:
 
